@@ -1,0 +1,24 @@
+.tablebtn{
+    border-radius: 0 20px;
+    margin:0 5px
+}
+.bg-pp{
+    background-color: #d945d2;    
+}
+.Table_Buttons{
+    overflow-x: scroll;
+}
+.Table_Buttons::-webkit-scrollbar{
+    width: 0;
+}.px-5 {
+    padding-right: 2.5rem!important;
+    padding-left: 2.5rem!important;
+}
+
+@media screen and (max-width:1000px) {
+    .px-5 {
+        padding-right: 1.1rem!important;
+        padding-left: 1.1rem!important;
+    }
+    
+    }

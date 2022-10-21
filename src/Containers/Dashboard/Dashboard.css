@@ -1,0 +1,32 @@
+.ip-dash-1{
+    height: 27.7rem;
+}
+
+.ip-progress{
+    margin-top: 8%;
+}
+
+/* .business-ip{
+    margin-top: 19%;
+} */
+
+@media screen and (max-width:1000px) {
+    .topbar-logo-header{
+        display: none !important;
+    }
+    .nav_top {
+        top: 57px !important;
+        display: inline-block;
+    }
+    .dashboard_home{
+        margin-top: 8rem !important;
+    }
+}
+
+
+/* @media only screen and (max-width: 1202px){
+.nav2 #nav-check:checked + .nav-links {
+    height: 100vh !important;
+    overflow-y: auto;
+}
+} */

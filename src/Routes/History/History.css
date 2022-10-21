@@ -1,0 +1,25 @@
+
+    .ctn-ip{
+        background-color: #fff;
+        color: black;
+    }
+
+    @media (min-width: 1090px){
+    td{
+        width: 14.28%;
+    }
+    .img-ip-1 {
+        width: 8%;
+    }
+
+}
+
+@media (max-width: 1090px){
+    td{
+        /* width: 14.28%; */
+    }
+    .img-ip-1 {
+        width: 50%;
+    }
+}
+    

@@ -1,0 +1,32 @@
+
+.act-ip{
+margin-left: 5px ;
+}
+@media (min-width: 1090px){
+td{
+    width: 14.28%;
+}
+.img-ip-1 {
+    width: 8%;
+}
+}
+
+@media (max-width: 1090px){
+.act-ip{
+margin-left: 71px;
+}
+
+td{
+    /* width: 14.28%; */
+}
+.img-ip-1 {
+    width: 50%;
+}
+}
+
+
+
+
+.size_model{
+    width: 100% !important;
+}
