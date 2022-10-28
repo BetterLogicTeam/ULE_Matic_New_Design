@@ -37,6 +37,8 @@ import My_Forum from "./Routes/Team Details/My_Forum";
 import My_Referral from "./Routes/Team Details/My_Referral";
 import My_Team from "./Routes/Team Details/My_Team";
 import Home from "./Routes/Home/Home";
+import Withdrawal_Matic_5050 from "./Routes/History/Withdrawal_Matic_5050";
+
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 function App() {
@@ -79,6 +81,7 @@ function App() {
           <Route exact path="/My_Referral" element={<My_Referral />} />
           <Route exact path="/My_Team" element={<My_Team />} />
           <Route exact path="/Profile" element={<Profile />} />
+          <Route exact path="/Withdrawal_Matic_5050" element={<Withdrawal_Matic_5050 />} />
           {/* </Route> */}
           {/* <Route /> */}
         </Routes>

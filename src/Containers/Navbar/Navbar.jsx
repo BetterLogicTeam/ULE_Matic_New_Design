@@ -219,6 +219,11 @@ function Navbar() {
                         </NavLink>
                       </li>
                       <li>
+                        <NavLink to="/Withdrawal_Matic_5050">
+                          <i className="bx bx-right-arrow-alt"></i>Withdraw Activation Matic
+                        </NavLink>
+                      </li>
+                      <li>
                         <NavLink to="/Withdrawal_history">
                           <i className="bx bx-right-arrow-alt"></i>Withdrawal History
                         </NavLink>

@@ -22,9 +22,10 @@ export default function Registration_with_BNB({ notify }) {
   let [ule, setule] = useState(' ')
   let [uid, setuid] = useState('')
   const [address, setaddress] = useState('')
-  const [selectPosition, setselectPosition] = useState(1)
+  const [selectPosition, setselectPosition] = useState("")
   const [isVisible, setisVisible] = useState(false)
   const [isVisible1, setisVisible1] = useState(false)
+  const [paymentType, setpaymentType] = useState("")
 
   const [isVisible2, setisVisible2] = useState(false)
   const [connected, setconnected] = useState('MetaMask is not connected..!..Wait...')
@@ -32,7 +33,6 @@ export default function Registration_with_BNB({ notify }) {
   const callapi = async () => {
     setloader(true)
 
-    console.log('position', selectPosition)
 
     let res = await API.post('/registration_v1', {
       sid: uid,
@@ -47,24 +47,24 @@ export default function Registration_with_BNB({ notify }) {
     console.log("Res", res);
     if (res.data.data.result == "waiting") {
       toast.success('Registered Successfully')
-      console.log(res.data)
+     
       setisVisible(false)
       setisVisible2(true)
       localStorage.setItem('NewUserID', res.data.data.outputuid)
       setloader(false)
 
-    } else if( res.data.data.result  =='Sponser ID is not  exists !!!'){
+    } else if (res.data.data.result == 'Sponser ID is not  exists !!!') {
       toast.error('Sponser ID is not  exists !!!')
       setloader(false)
-  
-  
-      
-    } else if(res.data.data.result  == 'Please Select Position !!!'){
+
+
+
+    } else if (res.data.data.result == 'Please Select Position !!!') {
       toast.error('Please Select Position !!!')
       setloader(false)
-  
-      
-  
+
+
+
     } else {
       toast.error('Account Already Resgistered with this ID')
       navigate('/Login_main')
@@ -75,7 +75,7 @@ export default function Registration_with_BNB({ notify }) {
   const callLoginApi = async () => {
 
     let res = await API.get(`/login?id='${address}'`)
-    console.log('login_data', res)
+   
     if (res.data.data !== 0) {
       localStorage.setItem('isAuthenticated', true)
       localStorage.setItem('user', JSON.stringify(res.data.data))
@@ -98,8 +98,10 @@ export default function Registration_with_BNB({ notify }) {
         "accountnumber": acc
       })
 
+      setpaymentType(res.data.data.output_paymenttype)
 
-      console.log("CheckRegiter", res.data.data);
+
+
 
       if (res.data.data.result == "Free Registered. Please Pay payment !!") {
         setisVisible2(true)
@@ -118,34 +120,36 @@ export default function Registration_with_BNB({ notify }) {
     } else {
       setaddress(acc)
       setconnected('MetaMask is connected... Ready To Register')
-      
-      ule = ule.toString()
-      // ule =1
-      
-      
-      ule = window.web3.utils.toWei(ule)
-      matic = matic.toString()
-      // matic = 100000000000
-      
-      
-      matic = window.web3.utils.toWei(matic)
-      // console.log("Check_Register");
-      console.log("Check_Register",ule);
-      console.log("Check_Register",matic);
-      try {
-        let contract = await new window.web3.eth.Contract(contractAbiBNB, contractAddressbnb)
-        let token = await new window.web3.eth.Contract(tokenAbi, tokenAddress)
-        let approveCall = await token.methods.approve(contractAddressbnb, ule).send({ from: acc })
-        toast.success('Approved')
-        let sellCall = await contract.methods.UlebuyRouter(ule).send({ from: acc, value: matic })
-        toast.success('Transection Succesfull')
-        sellCall = sellCall.transactionHash
-        Register_Hash(sellCall)
-        setloader(false)
+      if (paymentType !== "MATIC") {
+
+        ule = ule.toString()
+        // ule =1
+        ule = window.web3.utils.toWei(ule)
+        matic = matic.toString()
+        // matic = 100000000000
+        matic = window.web3.utils.toWei(matic)
+        // console.log("Check_Register");
+     
+        try {
+          let contract = await new window.web3.eth.Contract(contractAbiBNB, contractAddressbnb)
+          let token = await new window.web3.eth.Contract(tokenAbi, tokenAddress)
+          let approveCall = await token.methods.approve(contractAddressbnb, ule).send({ from: acc })
+          toast.success('Approved')
+          let sellCall = await contract.methods.UlebuyRouter(ule).send({ from: acc, value: matic })
+          toast.success('Transection Succesfull')
+          sellCall = sellCall.transactionHash
+          Register_Hash(sellCall)
+          setloader(false)
 
 
-      } catch (err) {
-        console.log('error while calling fuction sell', err)
+        } catch (err) {
+          console.log('error while calling fuction sell', err)
+          setloader(false)
+
+        }
+      }
+      else {
+        toast.error("Please Select MATIC Chain")
         setloader(false)
 
       }
@@ -154,12 +158,12 @@ export default function Registration_with_BNB({ notify }) {
   const callMaticUrliApi = async () => {
     let res = await axios.get(`https://ulematic-live-api.herokuapp.com/live_rate_bnb`)
     setmatic(Number(res.data.data[0].usdperunit) * 10)
-    console.log('BNB', Number(res.data.data[0].usdperunit) * 10)
+
   }
   const callUleApi = async () => {
     let res = await axios.get(`https://ulematic-live-api.herokuapp.com/live_rate_Ule_bnb`)
     setule((Number(res.data.data[0].usdperunit)) * 10)
-    console.log('ULE', res.data.data[0].usdperunit)
+ 
   }
   let Userid = localStorage.getItem('NewUserID')
 
@@ -175,7 +179,7 @@ export default function Registration_with_BNB({ notify }) {
       }
       )
 
-      console.log("Register_Hash",res);
+    
       setloader(true);
 
       setTimeout(() => {
@@ -186,14 +190,14 @@ export default function Registration_with_BNB({ notify }) {
       console.log("Erreo while call ing Register_Hash API", e);
     }
   }
-  
-  const Register_check=async()=>{
-    try{
+
+  const Register_check = async () => {
+    try {
       setloader(true);
       let res = await API.get(
         `/login?id='${address}'`
       );
-      console.log("login_data", res);
+   
       if (res.data.data !== 0) {
         localStorage.setItem("isAuthenticated", true);
         localStorage.setItem("user", JSON.stringify(res.data.data));
@@ -207,9 +211,9 @@ export default function Registration_with_BNB({ notify }) {
       }
 
 
-    }catch(e){
+    } catch (e) {
 
-      console.log("Error while calling Check Registration Fuction",e);
+      console.log("Error while calling Check Registration Fuction", e);
     }
   }
 
@@ -250,40 +254,6 @@ export default function Registration_with_BNB({ notify }) {
               >
                 Register
               </button>
-
-
-              {/* <div className=" w-100 h-100 d-none justify-content-center align-items-center  position-absolute  modelRegister">
-                <div className="  bord bord1 border-dark py-3 px-5 flex-column justify-content-center align-items-center d-flex main_form mainForm">
-                  <h4 className=" text-dark fs-5 my-3 color">Enter Upline ID</h4>
-                  <input
-                    type={'number'}
-                    className="btn left-btn-styl text-de lg-btn"
-                    onChange={(e) => {
-                      setuid(e.target.value)
-                    }}
-                  />
-                  <div className=" mt-4">
-                    <button
-                      className="btn left-btn-styl loginbtn text-de lg-btn px-3 mx-2"
-                      onClick={() => setisVisible(true)}
-
-                    >
-                      OK
-                    </button>
-                    <button
-                      className="btn left-btn-styl loginbtn text-de lg-btn px-3 mx-2 "
-                      onClick={() => {
-                        let modelRegister = document.querySelector('.modelRegister')
-                        modelRegister.classList.remove('d-flex')
-                        modelRegister.classList.add('d-none')
-                      }}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
-
-              </div> */}
               {
                 isVisible1 ?
                   <div id="myModal " class="mypop Register_model">
@@ -303,7 +273,7 @@ export default function Registration_with_BNB({ notify }) {
                       <div className=" mt-4">
                         <button
                           className="btn left-btn-styl loginbtn text-de lg-btn px-3 mx-2"
-                          onClick={() => (setisVisible(true),setisVisible1(false))}
+                          onClick={() => (setisVisible(true), setisVisible1(false))}
 
                         >
                           OK
@@ -338,7 +308,8 @@ export default function Registration_with_BNB({ notify }) {
                       <h4 className=" text-dark fs-5 my-3 color text-white">Referral Confirmation</h4>
                       <p>Your Current Referral ID is {uid}</p>
 
-                      <select className="boxset" name="position" onClick={(e) => setselectPosition(e.target.value)}>
+                      <select className="boxset " aria-label="Default select example" onChange={(e) => setselectPosition(e.target.value)}>
+                        <option selected>Please Select Position</option>
                         <option value="1">Left</option>
                         <option value="2">Right</option>
                       </select>
@@ -376,7 +347,7 @@ export default function Registration_with_BNB({ notify }) {
                         {/* <br /> */}
                         <button
                           className="btn left-btn-styl loginbtn text-de lg-btn"
-                          onClick={() => setisVisible(false)  }
+                          onClick={() => setisVisible(false)}
                         >
                           No I want to change ID
                         </button>
@@ -410,7 +381,7 @@ export default function Registration_with_BNB({ notify }) {
                     <div
                       class="modal-content boxset set_transfort2"
                       id="model-add"
-                      style={{ marginTop: '-209px', position: 'fixed', width: "23.5%"}}
+                      style={{ marginTop: '-209px', position: 'fixed', width: "23.5%" }}
                     >
                       <h4 style={{ color: 'white' }}>Payment here</h4>
                       <div className=" my-2 rate_div">
@@ -460,7 +431,7 @@ export default function Registration_with_BNB({ notify }) {
                             height: '40px',
                             paddingTop: '5px;',
                           }}
-                          onClick={()=>setisVisible2(false)}
+                          onClick={() => setisVisible2(false)}
                         >
                           Cancel
                         </a>

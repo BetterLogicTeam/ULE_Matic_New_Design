@@ -226,6 +226,19 @@ function Activation_matic() {
                 setLoadingTrans(false);
                 return;
             }
+
+            // to check eligible for activation
+            let responceEligible = await axios.post(`https://ulematic-live-api.herokuapp.com/activationEligible`, {
+                "uid": uid,
+                "amount": usdamt
+            })
+            responceEligible = responceEligible?.data?.data;
+            if (responceEligible != 'success') {
+                alert(responceEligible);
+                setLoadingTrans(false);
+                return;
+            }
+
             let tron_Rate = (amount / 2) * Number(1 / rate);
             tron_Rate = tron_Rate.toString()
             tron_Rate = window.web3.utils.toWei(tron_Rate)

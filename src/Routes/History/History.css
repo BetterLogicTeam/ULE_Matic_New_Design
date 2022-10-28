@@ -1,6 +1,6 @@
 
     .ctn-ip{
-        background-color: #fff;
+        background-color: #fff !important;
         color: black;
     }
 
@@ -22,4 +22,7 @@
         width: 50%;
     }
 }
-    
+.ctn-ip :focus {
+    background-color: #fff !important;
+    color: black;
+}
